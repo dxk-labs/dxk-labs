@@ -169,6 +169,8 @@ def section_title(title, t):
 def avatar_data(url):
     if not url:
         return None
+    if not url.startswith("http"):  # local file, e.g. assets/avatar.jpg
+        return image_uri(url) if (ROOT / url).exists() else None
     cache = OUT / "avatar.cache"  # "<url>\n<mime>\n<bytes>" so rebuilds don't hit the network
     if cache.exists():
         c_url, mime, raw = cache.read_bytes().split(b"\n", 2)

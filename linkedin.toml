@@ -9,7 +9,7 @@ pronouns = ""          # set to "" to hide
 headline = ""
 location = "Adelaide"
 stats = ""
-avatar = "https://avatars.githubusercontent.com/u/86919446?s=320&v=4"   # "" for initials
+avatar = "assets/avatar.jpg"   # a local image or a URL; "" for initials
 
 open_to_work = false
 open_to_work_roles = "[ROLE TITLES YOU WANT] roles"
