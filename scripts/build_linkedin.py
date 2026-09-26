@@ -117,7 +117,7 @@ def logo(x, y, size, t, label="", color="", fg="#fff", round_=False, img=None):
     if img:
         cid = f"lg{next(_clip_ids)}"
         return (f'<clipPath id="{cid}"><rect x="{x}" y="{y:.1f}" width="{size}" height="{size}" rx="{r}"/></clipPath>'
-                f'<imagehref="{img}" xlink:href="{img}" x="{x}" y="{y:.1f}" width="{size}" height="{size}" '
+                f'<image href="{img}" xlink:href="{img}" x="{x}" y="{y:.1f}" width="{size}" height="{size}" '
                 f'preserveAspectRatio="xMidYMid meet" clip-path="url(#{cid})"/>')
     if label and color:
         return (f'<rect x="{x}" y="{y:.1f}" width="{size}" height="{size}" rx="{r}" fill="{color}"/>'
