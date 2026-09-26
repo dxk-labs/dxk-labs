@@ -4,14 +4,14 @@
 # Anything in [SQUARE BRACKETS] is a placeholder.
 # Want About or Featured back? Add an `about = """..."""` / [[featured]] block and it reappears.
 
-name = "[YOUR NAME]"
-pronouns = "[PRONOUNS]"          # set to "" to hide
-headline = "Founder @ Sleep Fixer | Co-Founder @ MindBridge | Adelaide University"
-location = "Adelaide, South Australia, Australia"
-stats = "1 follower · 7 repositories"
+name = "Dhakshesh Dhanasekaran"
+pronouns = ""          # set to "" to hide
+headline = ""
+location = "Adelaide"
+stats = ""
 avatar = "https://avatars.githubusercontent.com/u/86919446?s=320&v=4"   # "" for initials
 
-open_to_work = true
+open_to_work = false
 open_to_work_roles = "[ROLE TITLES YOU WANT] roles"
 open_to_work_details = "Remote · Adelaide · [INTERNSHIP / PART-TIME / FULL-TIME]"
 
@@ -20,10 +20,9 @@ open_to_work_details = "Remote · Adelaide · [INTERNSHIP / PART-TIME / FULL-TIM
 title = "Founder"
 company = "Sleep Fixer"
 type = "Self-employed"
-dates = "[START] – Present"
-location = "Adelaide, South Australia"
-description = "Building an app that fixes a wrecked sleep schedule 15 minutes at a time instead of all at once. Took it from an App Inventor prototype to a Flutter rebuild with store-ready privacy, support and account-deletion pages."
-skills = "Flutter · Dart · Product Development"
+dates = "2025 – Present"
+location = ""
+description = "An app that actually helps you sleep better"
 logo_text = "SF"
 logo_color = "#0d1117"
 logo_text_color = "#fcd34d"
@@ -31,64 +30,53 @@ logo_text_color = "#fcd34d"
 [[experience]]
 title = "Co-Founder"
 company = "MindBridge"
-type = "[Full-time / Part-time]"
-dates = "[START] – Present"
-location = "[CITY]"
-description = "[What MindBridge does and what you own there, with a number in it if possible.]"
+type = ""
+dates = "2025 – Present"
+location = ""
+description = "Helping schools support students with mental health"
 skills = ""
 logo_text = "MB"
 logo_color = "#4338ca"
 logo_text_color = "#ffffff"
 
-[[experience]]
-title = "Founder & Developer"
-company = "dxk labs"
-type = "Self-employed"
-dates = "Jul 2021 – Present"
-location = "Adelaide, South Australia · Remote"
-description = "Building and shipping small tools solo: Ask ChatGPT (a right-click Chrome extension), Outlook Roomier (a layout fix for Outlook Web) and SlapWindows (a slap-to-react Windows utility)."
-skills = "JavaScript · Python · Chrome Extensions"
-logo_text = "dxk"
-logo_color = "#0d1117"
-logo_text_color = "#c3f73a"
+
 
 # ---------------------------------------------------------------- Education
 [[education]]
 school = "Adelaide University"
-degree = "[DEGREE], [FIELD OF STUDY]"
-dates = "[START] – [END]"
+degree = "Bachelor of Artificial Intelligence and Machine Learning"
+dates = "2025 – Present"
 logo_text = "AU"
 logo_color = "#0b2a4a"
 logo_text_color = "#ffffff"
 
 [[education]]
 school = "Kaplan"
-degree = "[PROGRAM / QUALIFICATION]"
-dates = "[START] – [END]"
+degree = ""
+dates = "2026"
 logo_text = "K"
 logo_color = "#1d1d1b"
 logo_text_color = "#ffffff"
 
+# ---------------------------------------------------------------- Volunteering
+[[volunteering]]
+role = "Medical Assistant"
+organization = "Standard Chartered"
+dates = "2024"
+cause = ""
+
+# ---------------------------------------------------------------- Honors & awards
+[[honors]]
+title = "MIT Global AI Hackathon 2025"
+issuer = "MIT RAISE"
+date = "2025"
+
+[[honors]]
+title = "Hack the Climate Challenge — Second Place"
+issuer = "MIT AI & Education Summit"
+date = ""
+
 # ---------------------------------------------------------------- Skills
-[[skills]]
-name = "Flutter"
-context = "Founder at Sleep Fixer"
-
-[[skills]]
-name = "Python"
-context = "SlapWindows and coursework at Adelaide University"
-
-[[skills]]
-name = "C"
-context = "Adelaide University"
-
-[[skills]]
-name = "JavaScript"
-context = "Ask ChatGPT and Outlook Roomier"
-
-[[skills]]
-name = "Browser Extensions (Manifest V3)"
-context = "2 projects at dxk labs"
 
 # ---------------------------------------------------------------- Contact info
 [[contact]]
