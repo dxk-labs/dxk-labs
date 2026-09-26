@@ -92,8 +92,33 @@ def svg(h, body, label, t, defs=""):
             f'{body}</svg>')
 
 
-def logo(x, y, size, t, label="", color="", fg="#fff", round_=False):
+_clip_ids = iter(range(10**6))
+ORGS = {}  # company / school / organization name -> its entry, so honors can borrow a logo
+
+
+def image_uri(rel):
+    f = ROOT / rel
+    mime = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml",
+            ".webp": "image/webp"}.get(f.suffix.lower(), "image/png")
+    return f"data:{mime};base64,{base64.b64encode(f.read_bytes()).decode()}"
+
+
+def org_logo(x, y, size, t, e):
+    """Real image if `logo = "assets/logos/..."` is set (and exists), else the text tile, else LinkedIn's grey building."""
+    e = e or {}
+    if e.get("logo") and (ROOT / e["logo"]).exists():
+        return logo(x, y, size, t, img=image_uri(e["logo"]))
+    return logo(x, y, size, t, e.get("logo_text", ""), e.get("logo_color", ""), e.get("logo_text_color", "#fff"))
+
+
+def logo(x, y, size, t, label="", color="", fg="#fff", round_=False, img=None):
     r = size / 2 if round_ else 4
+    if img:
+        cid = f"lg{next(_clip_ids)}"
+        return (f'<clipPath id="{cid}"><rect x="{x}" y="{y:.1f}" width="{size}" height="{size}" rx="{r}"/></clipPath>'
+                f'<rect x="{x}" y="{y:.1f}" width="{size}" height="{size}" rx="{r}" fill="#ffffff"/>'
+                f'<image href="{img}" xlink:href="{img}" x="{x}" y="{y:.1f}" width="{size}" height="{size}" '
+                f'preserveAspectRatio="xMidYMid meet" clip-path="url(#{cid})"/>')
     if label and color:
         return (f'<rect x="{x}" y="{y:.1f}" width="{size}" height="{size}" rx="{r}" fill="{color}"/>'
                 + text(x + size / 2, y + size / 2 + size * 0.13, label, size * 0.36, fg, 700, "middle"))
@@ -194,7 +219,7 @@ def top_card(d, t, av):
     for label, lg in [(d["experience"][0]["company"] if d.get("experience") else "", d["experience"][0] if d.get("experience") else {}),
                       (d["education"][0]["school"] if d.get("education") else "", d["education"][0] if d.get("education") else {})]:
         if label:
-            body += logo(rx, ry - 22, 32, t, lg.get("logo_text", ""), lg.get("logo_color", ""), lg.get("logo_text_color", "#fff"))
+            body += org_logo(rx, ry - 22, 32, t, lg)
             body += text(rx + 44, ry - 1, clip(label, 14, W - PAD - rx - 44, True), 14, t["text"], 600)
             ry += 44
 
@@ -303,7 +328,7 @@ def entries_card(title, entries, t, render, rule_x=88):
 
 def experience_entry(e, y, t):
     tx, w = 88, W - PAD - 88
-    b = logo(PAD, y, 48, t, e.get("logo_text", ""), e.get("logo_color", ""), e.get("logo_text_color", "#fff"))
+    b = org_logo(PAD, y, 48, t, e)
     y += 16
     b += text(tx, y, e["title"], 16, t["text"], 600)
     y += 22
@@ -326,7 +351,7 @@ def experience_entry(e, y, t):
 def info_entry(e, y, t, title, lines, show_logo=True):
     """title in bold, then (text, muted?) lines, then an optional description; blank lines are skipped."""
     tx, y0 = (88 if show_logo else PAD), y
-    b = logo(PAD, y, 48, t, e.get("logo_text", ""), e.get("logo_color", ""), e.get("logo_text_color", "#fff")) if show_logo else ""
+    b = org_logo(PAD, y, 48, t, e) if show_logo else ""
     y += 16
     b += text(tx, y, title, 16, t["text"], 600)
     y += 2
@@ -334,6 +359,11 @@ def info_entry(e, y, t, title, lines, show_logo=True):
         if line:
             y += 20
             b += text(tx, y, line, 14, t["muted"] if muted else t["text"])
+    if e.get("associated"):
+        y += 14
+        b += org_logo(tx, y, 24, t, ORGS.get(e["associated"]))
+        b += text(tx + 32, y + 17, f'Associated with {e["associated"]}', 14, t["text"])
+        y += 24
     if e.get("description"):
         p, y = para(tx, y + 30, e["description"], t, W - PAD - tx)
         b += p
@@ -352,7 +382,7 @@ def volunteering_entry(e, y, t):
 
 def honor_entry(e, y, t):
     issued = " · ".join(filter(None, [f'Issued by {e["issuer"]}' if e.get("issuer") else "", e.get("date")]))
-    return info_entry(e, y, t, e["title"], [(issued, True)], show_logo=bool(e.get("logo_text")))
+    return info_entry(e, y, t, e["title"], [(issued, True)], show_logo=bool(e.get("logo") or e.get("logo_text")))
 
 
 def skill_entry(e, y, t):
@@ -431,6 +461,8 @@ def main():
     for old in OUT.glob("*.svg"):
         old.unlink()
     av = avatar_data(d.get("avatar", ""))
+    for key, name in [("experience", "company"), ("education", "school"), ("volunteering", "organization")]:
+        ORGS.update({e[name]: e for e in d.get(key, []) if e.get(name)})
     for name, t in THEMES.items():
         builders = {
             "about": lambda: about_card(d, t),
@@ -440,7 +472,7 @@ def main():
             "skills": lambda: skills_card(d, t),
             "volunteering": lambda: entries_card("Volunteering", d["volunteering"], t, volunteering_entry),
             "honors": lambda: entries_card("Honors & awards", d["honors"], t, honor_entry,
-                                           88 if any(h.get("logo_text") for h in d["honors"]) else PAD),
+                                           88 if any(h.get("logo") or h.get("logo_text") for h in d["honors"]) else PAD),
             "contact": lambda: contact_card(d, t),
         }
         cards = {"top": top_card(d, t, av)}

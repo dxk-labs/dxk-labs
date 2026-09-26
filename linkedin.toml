@@ -23,6 +23,7 @@ type = "Self-employed"
 dates = "2025 – Present"
 location = ""
 description = "An app that actually helps you sleep better"
+logo = "assets/logos/sleep-fixer.png"      # drop your icon here; the SF tile shows until then
 logo_text = "SF"
 logo_color = "#0d1117"
 logo_text_color = "#fcd34d"
@@ -35,6 +36,7 @@ dates = "2025 – Present"
 location = ""
 description = "Helping schools support students with mental health"
 skills = ""
+logo = "assets/logos/mindbridge.png"       # drop your logo here; the MB tile shows until then
 logo_text = "MB"
 logo_color = "#4338ca"
 logo_text_color = "#ffffff"
@@ -46,6 +48,7 @@ logo_text_color = "#ffffff"
 school = "Adelaide University"
 degree = "Bachelor of Artificial Intelligence and Machine Learning"
 dates = "2025 – Present"
+logo = "assets/logos/adelaide-university.png"
 logo_text = "AU"
 logo_color = "#0b2a4a"
 logo_text_color = "#ffffff"
@@ -54,6 +57,7 @@ logo_text_color = "#ffffff"
 school = "Kaplan"
 degree = ""
 dates = "2026"
+logo = "assets/logos/kaplan.png"
 logo_text = "K"
 logo_color = "#1d1d1b"
 logo_text_color = "#ffffff"
@@ -64,17 +68,20 @@ role = "Medical Assistant"
 organization = "Standard Chartered"
 dates = "2024"
 cause = ""
+logo = "assets/logos/standard-chartered.png"
 
 # ---------------------------------------------------------------- Honors & awards
 [[honors]]
 title = "MIT Global AI Hackathon 2025"
 issuer = "MIT RAISE"
 date = "2025"
+associated = "Sleep Fixer"                # must match an experience/education/volunteering name
 
 [[honors]]
 title = "Hack the Climate Challenge — Second Place"
 issuer = "MIT AI & Education Summit"
 date = ""
+associated = ""
 
 # ---------------------------------------------------------------- Skills
 
