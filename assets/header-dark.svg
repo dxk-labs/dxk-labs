@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-label="dxk labs: building small tools that fix annoying things">
+<defs>
+  <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#2a313c"/></pattern>
+  <linearGradient id="fade" x1="0" x2="1"><stop offset="0.25" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="1"/></linearGradient>
+  <mask id="m"><rect width="1200" height="340" fill="url(#fade)"/></mask>
+  <radialGradient id="glow" cx="1000" cy="170" r="260" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c3f73a" stop-opacity="0.16"/><stop offset="1" stop-color="#c3f73a" stop-opacity="0"/></radialGradient>
+  <mask id="crescent"><rect width="1200" height="340" fill="#fff"/><circle cx="1016" cy="158" r="30" fill="#000"/></mask>
+  <clipPath id="type"><rect x="96" y="232" height="44" width="0"><animate attributeName="width" values="0.0;14.4;28.8;43.2;57.6;72.0;86.4;100.8;115.2;129.6;144.0;158.4;172.8;187.2;201.6;216.0;230.4;244.8;259.2;273.6;288.0;302.4;316.8;331.2;345.6;360.0;374.4;388.8;403.2;417.6;432.0;446.4;460.8;475.2;489.6;504.0;518.4;532.8;547.2;561.6;576.0;590.4;604.8;619.2;633.6;648.0" dur="2.48s" begin="0.9s" calcMode="discrete" fill="freeze"/></rect></clipPath>
+  <clipPath id="frame"><rect width="1200" height="340" rx="22"/></clipPath>
+  <style>
+    .rise{opacity:0;animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  </style>
+</defs>
+<g clip-path="url(#frame)">
+  <rect width="1200" height="340" fill="#0d1117"/>
+  <rect width="1200" height="340" fill="url(#dots)" mask="url(#m)"/>
+  <rect width="1200" height="340" fill="url(#glow)"/>
+  <circle cx="820" cy="60" r="1.6" fill="#f0f6fc"><animate attributeName="opacity" values="0.1;0.9;0.1" dur="3.0s" begin="0.0s" repeatCount="indefinite"/></circle><circle cx="1150" cy="90" r="1.6" fill="#f0f6fc"><animate attributeName="opacity" values="0.1;0.9;0.1" dur="3.7s" begin="0.4s" repeatCount="indefinite"/></circle><circle cx="870" cy="290" r="1.6" fill="#f0f6fc"><animate attributeName="opacity" values="0.1;0.9;0.1" dur="4.4s" begin="0.8s" repeatCount="indefinite"/></circle><circle cx="1130" cy="280" r="1.6" fill="#f0f6fc"><animate attributeName="opacity" values="0.1;0.9;0.1" dur="5.1s" begin="1.2s" repeatCount="indefinite"/></circle><circle cx="760" cy="200" r="1.6" fill="#f0f6fc"><animate attributeName="opacity" values="0.1;0.9;0.1" dur="5.8s" begin="1.6s" repeatCount="indefinite"/></circle><circle cx="1170" cy="190" r="1.6" fill="#f0f6fc"><animate attributeName="opacity" values="0.1;0.9;0.1" dur="6.5s" begin="2.0s" repeatCount="indefinite"/></circle>
+  <circle cx="1000" cy="170" r="62" fill="none" stroke="#8b949e" stroke-opacity="0.35" stroke-dasharray="2 6"/><g><circle cx="1062" cy="170" r="5" fill="#c3f73a"/><animateTransform attributeName="transform" type="rotate" from="0 1000 170" to="360 1000 170" dur="12s" repeatCount="indefinite"/></g><circle cx="1000" cy="170" r="104" fill="none" stroke="#8b949e" stroke-opacity="0.35" stroke-dasharray="2 6"/><g><circle cx="1104" cy="170" r="4" fill="#8b949e"/><animateTransform attributeName="transform" type="rotate" from="0 1000 170" to="360 1000 170" dur="21s" repeatCount="indefinite"/></g><circle cx="1000" cy="170" r="146" fill="none" stroke="#8b949e" stroke-opacity="0.35" stroke-dasharray="2 6"/><g><circle cx="1146" cy="170" r="3.5" fill="#fcd34d"/><animateTransform attributeName="transform" type="rotate" from="0 1000 170" to="360 1000 170" dur="34s" repeatCount="indefinite"/></g>
+  <circle cx="1000" cy="170" r="34" fill="#fcd34d" mask="url(#crescent)"/>
+</g>
+<rect x="0.5" y="0.5" width="1199" height="339" rx="22" fill="none" stroke="#262c36"/>
+<g class="rise"><text x="64" y="96" font-family="ui-monospace,'SFMono-Regular','JetBrains Mono',Consolas,Menlo,monospace" font-size="16" fill="#c3f73a" textLength="96.0" lengthAdjust="spacingAndGlyphs" >~/dxk-labs</text><text x="174.0" y="96" font-family="ui-monospace,'SFMono-Regular','JetBrains Mono',Consolas,Menlo,monospace" font-size="16" fill="#8b949e" textLength="345.6" lengthAdjust="spacingAndGlyphs" >// adelaide, au  // [YOUR ROLE HERE]</text></g>
+<g class="rise" style="animation-delay:.15s"><text x="58" y="200" font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif" font-size="108" font-weight="800" letter-spacing="-4" fill="#f0f6fc">dxk labs<tspan fill="#c3f73a">.</tspan></text></g>
+<g class="rise" style="animation-delay:.3s"><text x="64" y="262" font-family="ui-monospace,'SFMono-Regular','JetBrains Mono',Consolas,Menlo,monospace" font-size="24" fill="#c3f73a" textLength="14.4" lengthAdjust="spacingAndGlyphs" >$</text><text x="96" y="262" font-family="ui-monospace,'SFMono-Regular','JetBrains Mono',Consolas,Menlo,monospace" font-size="24" fill="#f0f6fc" textLength="648.0" lengthAdjust="spacingAndGlyphs" clip-path="url(#type)">building small tools that fix annoying things</text></g>
+<rect x="96" y="240" width="14.4" height="28" fill="#c3f73a">
+  <animate attributeName="x" values="96.0;110.4;124.8;139.2;153.6;168.0;182.4;196.8;211.2;225.6;240.0;254.4;268.8;283.2;297.6;312.0;326.4;340.8;355.2;369.6;384.0;398.4;412.8;427.2;441.6;456.0;470.4;484.8;499.2;513.6;528.0;542.4;556.8;571.2;585.6;600.0;614.4;628.8;643.2;657.6;672.0;686.4;700.8;715.2;729.6;744.0" dur="2.48s" begin="0.9s" calcMode="discrete" fill="freeze"/>
+  <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.05s" repeatCount="indefinite"/>
+</rect>
+</svg>
