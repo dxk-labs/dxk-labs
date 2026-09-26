@@ -4,7 +4,7 @@ Run:  py scripts/preview.py      then open http://localhost:8787
 - Editing README.md or anything in assets/ re-renders in place (scroll is kept).
 - Editing scripts/build_assets.py regenerates the SVGs first.
 - The "edit" button opens a side-by-side editor that autosaves the source file.
-- "classic" edits README.md; "linkedin" edits linkedin.toml and rebuilds README.linkedin.md.
+- "linkedin" (the live README.md) edits linkedin.toml and rebuilds; "classic" edits README.classic.md.
 """
 import http.server
 import os
@@ -18,7 +18,7 @@ PORT = 8787
 BUILD = ROOT / "scripts" / "build_assets.py"
 BUILD_LI = ROOT / "scripts" / "build_linkedin.py"
 TOML = ROOT / "linkedin.toml"
-EDITABLE = {"README.md", "linkedin.toml"}
+EDITABLE = {"README.classic.md", "linkedin.toml"}
 
 PAGE = """<!doctype html>
 <html lang="en" data-theme="auto">
@@ -116,8 +116,8 @@ function note(msg) {
 }
 const src = document.getElementById('src');
 const VARIANTS = {
-  classic:  { readme: 'README.md',          source: 'README.md',     live: true },
-  linkedin: { readme: 'README.linkedin.md', source: 'linkedin.toml', live: false },
+  classic:  { readme: 'README.classic.md',  source: 'README.classic.md', live: true },
+  linkedin: { readme: 'README.md',          source: 'linkedin.toml',     live: false },
 };
 let variant = 'linkedin', saved = null, saveTimer = 0, renderTimer = 0;
 try { const v = localStorage.getItem('pv-variant'); if (VARIANTS[v]) variant = v; } catch (e) {}
@@ -192,7 +192,7 @@ load('loaded');
 
 
 def snapshot():
-    files = [ROOT / "README.md", ROOT / "README.linkedin.md", TOML, BUILD, BUILD_LI, *(ROOT / "assets").rglob("*.svg")]
+    files = [ROOT / "README.md", ROOT / "README.classic.md", TOML, BUILD, BUILD_LI, *(ROOT / "assets").rglob("*.svg")]
     return {f: f.stat().st_mtime for f in files if f.exists()}
 
 
@@ -253,7 +253,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path, _, query = self.path.partition("?")
-        name = query.removeprefix("f=") or "README.md"
+        name = query.removeprefix("f=")
         if path != "/__save" or name not in EDITABLE:
             self.send_error(404)
             return

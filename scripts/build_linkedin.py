@@ -1,4 +1,4 @@
-"""Builds the LinkedIn-style profile: linkedin.toml -> assets/li/*.svg + README.linkedin.md
+"""Builds the LinkedIn-style profile: linkedin.toml -> assets/li/*.svg + README.md (the live profile)
 
 Run:  py scripts/build_linkedin.py
 """
@@ -15,7 +15,7 @@ from build_assets import THEMES as BRAND, glyph  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "linkedin.toml"
 OUT = ROOT / "assets" / "li"
-README = ROOT / "README.linkedin.md"
+README = ROOT / "README.md"
 
 W, PAD = 800, 24
 TX = PAD + 48 + 8  # entry text column: LinkedIn's 48px logo + 8px gap

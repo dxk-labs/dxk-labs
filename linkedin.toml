@@ -95,12 +95,14 @@ url = "https://github.com/dxk-labs"
 icon = "profile"
 
 [[contact]]
+hidden = true            # fill in value/url, then delete this line
 label = "Website"
 value = "[YOUR_SITE]"
 url = "[YOUR_WEBSITE_URL]"
 icon = "link"
 
 [[contact]]
+hidden = true            # fill in value/url, then delete this line
 label = "Email"
 value = "[YOUR_EMAIL]"
 url = "mailto:[YOUR_EMAIL]"
