@@ -74,7 +74,7 @@ logo = "assets/logos/standard-chartered.png"
 
 # ---------------------------------------------------------------- Honors & awards
 [[honors]]
-title = "MIT Global AI Hackathon 2025"
+title = "MIT Global AI Hackathon 2025 — Honorable Mention"
 issuer = "MIT RAISE"
 date = "2025"
 associated = "Sleep Fixer"                # must match an experience/education/volunteering name
