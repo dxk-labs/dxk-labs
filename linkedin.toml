@@ -6,7 +6,7 @@
 
 name = "Dhakshesh Dhanasekaran"
 pronouns = ""          # set to "" to hide
-headline = ""
+headline = "AI & ML @ Adelaide University | Founder, Sleep Fixer | MIT Global AI Hackathon Honorable Mention"
 location = "Adelaide"
 stats = ""
 avatar = "assets/avatar.jpg"   # a local image or a URL; "" for initials
@@ -22,7 +22,13 @@ company = "Sleep Fixer"
 type = "Self-employed"
 dates = "2025 – Present"
 location = ""
-description = "An app that actually helps you sleep better"
+description = """
+An app that actually helps you sleep better. Instead of forcing a sudden change, Sleep Fixer shifts your schedule 15–30 minutes a day toward the sleep and wake times you want.
+
+Honorable Mention at the MIT Global AI Hackathon 2025, and presented at MIT during the AI & Education Summit.
+
+Grew from an MIT App Inventor prototype into a Flutter app, with privacy, support and account-deletion pages ready for the app stores.
+"""
 logo = "assets/logos/sleep-fixer.png"      # drop your icon here; the SF tile shows until then
 logo_text = "SF"
 logo_color = "#0d1117"
