@@ -18,6 +18,7 @@ OUT = ROOT / "assets" / "li"
 README = ROOT / "README.linkedin.md"
 
 W, PAD = 800, 24
+TX = PAD + 48 + 8  # entry text column: LinkedIn's 48px logo + 8px gap
 FONT = "-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"
 
 THEMES = {
@@ -215,7 +216,7 @@ def top_card(d, t, av):
                  f'<textPath href="#otw" xlink:href="#otw" startOffset="50%" text-anchor="middle">#OPENTOWORK</textPath></text>')
 
     # right column: current company + school
-    rx, ry = 528, BH + 44
+    rx, ry = 528, BH + 106
     for label, lg in [(d["experience"][0]["company"] if d.get("experience") else "", d["experience"][0] if d.get("experience") else {}),
                       (d["education"][0]["school"] if d.get("education") else "", d["education"][0] if d.get("education") else {})]:
         if label:
@@ -313,7 +314,7 @@ def featured_card(d, t):
     return svg(y0 + 220 + 24, body, "Featured", t, defs)
 
 
-def entries_card(title, entries, t, render, rule_x=88):
+def entries_card(title, entries, t, render, rule_x=TX):
     body = section_title(title, t)
     y = 64
     for i, e in enumerate(entries):
@@ -323,11 +324,11 @@ def entries_card(title, entries, t, render, rule_x=88):
         b, y = render(e, y, t)
         body += b
         y += 16
-    return svg(y + 8, body, title, t)
+    return svg(y + 4, body, title, t)
 
 
 def experience_entry(e, y, t):
-    tx, w = 88, W - PAD - 88
+    tx, w = TX, W - PAD - TX
     b = org_logo(PAD, y, 48, t, e)
     y += 16
     b += text(tx, y, e["title"], 16, t["text"], 600)
@@ -337,7 +338,7 @@ def experience_entry(e, y, t):
         y += 20
         b += text(tx, y, meta, 14, t["muted"])
     if e.get("description"):
-        p, y = para(tx, y + 30, e["description"], t, w)
+        p, y = para(tx, y + 28, e["description"], t, w)
         b += p
         y -= 20
     if e.get("skills"):
@@ -350,7 +351,7 @@ def experience_entry(e, y, t):
 
 def info_entry(e, y, t, title, lines, show_logo=True):
     """title in bold, then (text, muted?) lines, then an optional description; blank lines are skipped."""
-    tx, y0 = (88 if show_logo else PAD), y
+    tx, y0 = (TX if show_logo else PAD), y
     b = org_logo(PAD, y, 48, t, e) if show_logo else ""
     y += 16
     b += text(tx, y, title, 16, t["text"], 600)
@@ -365,7 +366,7 @@ def info_entry(e, y, t, title, lines, show_logo=True):
         b += text(tx + 32, y + 17, f'Associated with {e["associated"]}', 14, t["text"])
         y += 24
     if e.get("description"):
-        p, y = para(tx, y + 30, e["description"], t, W - PAD - tx)
+        p, y = para(tx, y + 28, e["description"], t, W - PAD - tx)
         b += p
         y -= 20
     return b, max(y + 4, y0 + 52 if show_logo else 0)  # never shorter than the logo
@@ -472,7 +473,7 @@ def main():
             "skills": lambda: skills_card(d, t),
             "volunteering": lambda: entries_card("Volunteering", d["volunteering"], t, volunteering_entry),
             "honors": lambda: entries_card("Honors & awards", d["honors"], t, honor_entry,
-                                           88 if any(h.get("logo") or h.get("logo_text") for h in d["honors"]) else PAD),
+                                           TX if any(h.get("logo") or h.get("logo_text") for h in d["honors"]) else PAD),
             "contact": lambda: contact_card(d, t),
         }
         cards = {"top": top_card(d, t, av)}
