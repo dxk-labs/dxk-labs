@@ -23,11 +23,12 @@ type = "Self-employed"
 dates = "2025 – Present"
 location = ""
 description = """
-An app that actually helps you sleep better. Instead of forcing a sudden change, Sleep Fixer shifts your schedule 15–30 minutes a day toward the sleep and wake times you want.
+An app that actually helps you sleep better.
 
-Honorable Mention at the MIT Global AI Hackathon 2025, and presented at MIT during the AI & Education Summit.
+Honorable Mention at the MIT Global AI Hackathon 2025
+Presented at MIT during the AI & Education Summit
 
-Grew from an MIT App Inventor prototype into a Flutter app, with privacy, support and account-deletion pages ready for the app stores.
+Available soon on the App Store / Play Store
 """
 logo = "assets/logos/sleep-fixer.png"      # drop your icon here; the SF tile shows until then
 logo_text = "SF"
