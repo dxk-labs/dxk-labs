@@ -3,6 +3,7 @@
 Run:  py scripts/preview.py      then open http://localhost:8787
 - Editing README.md or anything in assets/ re-renders in place (scroll is kept).
 - Editing scripts/build_assets.py regenerates the SVGs first.
+- The "edit" button opens a side-by-side editor that autosaves README.md.
 """
 import http.server
 import subprocess
@@ -42,19 +43,38 @@ PAGE = """<!doctype html>
   .frame-label { font-size:12px; color:var(--muted); margin:0 0 8px; font-family:ui-monospace,Consolas,monospace; }
   .markdown-body { background:transparent !important; }
   @media (max-width:600px) { .frame { padding:16px; } }
+  .editor { display:none; }
+  body.editing main { max-width:none; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,896px); gap:20px; }
+  body.editing .editor { display:flex; flex-direction:column; position:sticky; top:62px; height:calc(100vh - 86px); }
+  .editor textarea { flex:1; width:100%; resize:none; padding:14px; border:1px solid var(--border); border-radius:6px;
+                     background:var(--panel); color:var(--fg); font:13px/1.55 ui-monospace,Consolas,monospace; tab-size:2; }
+  .editor textarea:focus { outline:2px solid var(--ok); outline-offset:-1px; }
+  .hint { font-size:12px; color:var(--muted); margin:8px 0 0; }
+  kbd { font:11px ui-monospace,Consolas,monospace; border:1px solid var(--border); border-radius:4px; padding:1px 5px; }
+  #next { display:none; }
+  body.editing #next { display:inline-block; }
+  @media (max-width:900px) { body.editing main { grid-template-columns:minmax(0,1fr); } body.editing .editor { position:static; height:60vh; } }
 </style>
 </head>
 <body>
 <div class="bar">
   <span class="dot" id="dot"></span><b>Profile preview</b>
   <span class="status" id="status">connecting…</span>
+  <button id="next" title="Jump to the next [PLACEHOLDER] (Ctrl+.)">next placeholder</button>
+  <button id="edit" aria-pressed="false">edit</button>
   <button data-t="auto" aria-pressed="true">auto</button>
   <button data-t="light" aria-pressed="false">light</button>
   <button data-t="dark" aria-pressed="false">dark</button>
 </div>
 <main>
-  <p class="frame-label">dxk-labs / README.md</p>
-  <div class="frame"><article class="markdown-body" id="out"></article></div>
+  <section class="editor">
+    <textarea id="src" spellcheck="false" aria-label="README.md source"></textarea>
+    <p class="hint">Autosaves to README.md as you type · <kbd>Ctrl</kbd>+<kbd>.</kbd> jumps to the next <code>[PLACEHOLDER]</code></p>
+  </section>
+  <div>
+    <p class="frame-label">dxk-labs / README.md</p>
+    <div class="frame"><article class="markdown-body" id="out"></article></div>
+  </div>
 </main>
 <script>
 const out = document.getElementById('out'), statusEl = document.getElementById('status'), dot = document.getElementById('dot');
@@ -70,7 +90,7 @@ function bust(url) {
 function render() {
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = effectiveDark() ? 'dark' : 'light';
-  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === theme));
+  document.querySelectorAll('[data-t]').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === theme));
   out.innerHTML = marked.parse(md, { gfm: true });
   // <picture> follows the OS theme; resolve it ourselves so the toggle works like GitHub's.
   const dark = effectiveDark();
@@ -81,16 +101,54 @@ function render() {
   });
   out.querySelectorAll('img').forEach(i => i.setAttribute('src', bust(i.getAttribute('src'))));
 }
+function note(msg) {
+  statusEl.textContent = msg + ' · ' + new Date().toLocaleTimeString();
+  dot.classList.add('flash'); setTimeout(() => dot.classList.remove('flash'), 250);
+}
+const src = document.getElementById('src');
+let saved = null, saveTimer = 0, renderTimer = 0;
+
 async function load(reason) {
+  const text = await (await fetch('/README.md?t=' + Date.now())).text();
+  if (text === saved && reason === 'README.md changed') return;  // our own autosave echoing back
   const y = scrollY;
-  md = await (await fetch('/README.md?t=' + Date.now())).text();
+  if (src.value === (saved ?? '') || src.value === '') { src.value = text; saved = text; }
+  md = src.value;
   stamp = Date.now();
   render();
   scrollTo(0, y);
-  statusEl.textContent = reason + ' · ' + new Date().toLocaleTimeString();
-  dot.classList.add('flash'); setTimeout(() => dot.classList.remove('flash'), 250);
+  note(reason);
 }
-document.querySelectorAll('.bar button').forEach(b => b.onclick = () => {
+src.addEventListener('input', () => {
+  clearTimeout(renderTimer); renderTimer = setTimeout(() => { md = src.value; render(); }, 120);
+  clearTimeout(saveTimer); statusEl.textContent = 'unsaved…';
+  saveTimer = setTimeout(async () => {
+    const body = src.value;
+    const r = await fetch('/__save', { method: 'POST', body });
+    if (r.ok) { saved = body; note('saved'); } else note('save failed');
+  }, 600);
+});
+function nextPlaceholder() {
+  const re = /\\[[A-Z][^\\]\\n]*\\]/g;
+  re.lastIndex = src.selectionEnd;
+  const m = re.exec(src.value) || (re.lastIndex = 0, re.exec(src.value));
+  if (!m) { note('no placeholders left 🎉'); return; }
+  src.focus(); src.setSelectionRange(m.index, m.index + m[0].length);
+  const line = src.value.slice(0, m.index).split('\\n').length;
+  src.scrollTop = Math.max(0, (line - 6) * parseFloat(getComputedStyle(src).lineHeight));
+}
+document.getElementById('next').onclick = nextPlaceholder;
+addEventListener('keydown', e => { if (e.ctrlKey && e.key === '.') { e.preventDefault(); nextPlaceholder(); } });
+const editBtn = document.getElementById('edit');
+function setEditing(on) {
+  document.body.classList.toggle('editing', on);
+  editBtn.setAttribute('aria-pressed', on);
+  try { localStorage.setItem('pv-edit', on ? '1' : ''); } catch (e) {}
+}
+editBtn.onclick = () => setEditing(!document.body.classList.contains('editing'));
+try { setEditing(localStorage.getItem('pv-edit') === '1'); } catch (e) {}
+
+document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
   theme = b.dataset.t;
   try { localStorage.setItem('pv-theme', theme); } catch (e) {}
   render();
@@ -159,6 +217,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 pass
         else:
             super().do_GET()
+
+    def do_POST(self):
+        if self.path != "/__save":
+            self.send_error(404)
+            return
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        (ROOT / "README.md").write_bytes(body)
+        self.send_response(204)
+        self.end_headers()
 
 
 if __name__ == "__main__":
