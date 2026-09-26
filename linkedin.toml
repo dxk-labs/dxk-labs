@@ -29,6 +29,7 @@ logo_color = "#0d1117"
 logo_text_color = "#fcd34d"
 
 [[experience]]
+hidden = true            # delete this line (or set false) to show it again
 title = "Co-Founder"
 company = "MindBridge"
 type = ""
@@ -54,6 +55,7 @@ logo_color = "#0b2a4a"
 logo_text_color = "#ffffff"
 
 [[education]]
+hidden = true            # delete this line (or set false) to show it again
 school = "Kaplan"
 degree = ""
 dates = "2026"

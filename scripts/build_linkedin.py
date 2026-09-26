@@ -464,6 +464,10 @@ def main():
     av = avatar_data(d.get("avatar", ""))
     for key, name in [("experience", "company"), ("education", "school"), ("volunteering", "organization")]:
         ORGS.update({e[name]: e for e in d.get(key, []) if e.get(name)})
+    # `hidden = true` on any entry keeps it in the TOML but off the profile
+    for key, val in list(d.items()):
+        if isinstance(val, list) and val and isinstance(val[0], dict):
+            d[key] = [e for e in val if not e.get("hidden")]
     for name, t in THEMES.items():
         builders = {
             "about": lambda: about_card(d, t),
