@@ -208,6 +208,7 @@ def top_card(d, t, av):
     body += f'<circle cx="{cx}" cy="{cy}" r="{r + 4}" fill="{t["card"]}"/>'
     if av:
         body += f'<image href="{av}" xlink:href="{av}" x="{cx - r}" y="{cy - r}" width="{2 * r}" height="{2 * r}" clip-path="url(#av)" preserveAspectRatio="xMidYMid slice"/>'
+        body += f'<circle cx="{cx}" cy="{cy}" r="{r - 1.25}" fill="none" stroke="#111111" stroke-width="2.5"/>'
     else:
         initials = "".join(w[0] for w in d["name"].strip("[]").split()[:2]).upper() or "?"
         body += f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{t["chip"]}"/>' + text(cx, cy + 14, initials, 40, t["muted"], 600, "middle")
