@@ -1,0 +1,118 @@
+# LinkedIn-style profile — edit this file, everything else is generated.
+# Preview:  py scripts/preview.py   (or it rebuilds automatically in the preview editor)
+# Build:    py scripts/build_linkedin.py
+# Anything in [SQUARE BRACKETS] is a placeholder.
+
+name = "[YOUR NAME]"
+pronouns = "[PRONOUNS]"          # set to "" to hide
+headline = "[YOUR HEADLINE] | Building Sleep Fixer | Python · C · Flutter · Browser extensions"
+location = "Adelaide, South Australia, Australia"
+stats = "1 follower · 7 repositories"
+avatar = "https://avatars.githubusercontent.com/u/86919446?s=320&v=4"   # "" for initials
+
+open_to_work = true
+open_to_work_roles = "[ROLE TITLES YOU WANT] roles"
+open_to_work_details = "Remote · Adelaide · [INTERNSHIP / PART-TIME / FULL-TIME]"
+
+about = """
+I build small, sharp tools for problems that annoy me, then ship them so they stop annoying everyone else.
+
+So far that's a sleep-schedule app, a couple of browser extensions, and a Windows utility you control by slapping your laptop.
+
+[ONE OR TWO LINES ABOUT WHAT YOU WANT NEXT, e.g. "Looking for a summer internship in mobile or web."]
+"""
+top_skills = ["Python", "C", "JavaScript", "Flutter", "Browser Extensions"]
+
+# ---------------------------------------------------------------- Featured
+[[featured]]
+title = "Sleep Fixer — shift your sleep schedule 15 minutes at a time"
+source = "github.com/dxk-labs/sleep-fixer-legacy"
+url = "https://github.com/dxk-labs/sleep-fixer-legacy"
+glyph = "moon"
+
+[[featured]]
+title = "Ask ChatGPT — right-click any text to ask about it"
+source = "github.com/dxk-labs/ask-chatgpt-extension"
+url = "https://github.com/dxk-labs/ask-chatgpt-extension"
+glyph = "chat"
+
+[[featured]]
+title = "Outlook Roomier — Outlook Web without the cramped layout"
+source = "[REPO LINK PLACEHOLDER]"
+url = "[OUTLOOK_ROOMIER_REPO_URL]"
+glyph = "mail"
+
+[[featured]]
+title = "SlapWindows — slap your laptop, it reacts"
+source = "[REPO LINK PLACEHOLDER]"
+url = "[SLAPWINDOWS_REPO_URL]"
+glyph = "wave"
+
+# ---------------------------------------------------------------- Experience
+[[experience]]
+title = "Founder & Developer"
+company = "dxk labs"
+type = "Self-employed"
+dates = "Jul 2021 – Present"
+location = "Adelaide, South Australia · Remote"
+description = "Designing, building and shipping mobile apps and browser extensions solo. Took Sleep Fixer from an App Inventor prototype to a Flutter rebuild with store-ready privacy, support and account-deletion pages."
+skills = "Flutter · Dart · JavaScript · Chrome Extensions"
+logo_text = "dxk"
+logo_color = "#0d1117"
+logo_text_color = "#c3f73a"
+
+[[experience]]
+title = "[ROLE]"
+company = "[COMPANY / CLUB / VOLUNTEER GIG]"
+type = "[Part-time / Casual / Volunteer]"
+dates = "[START] – [END]"
+location = "[CITY]"
+description = "[What you did, with a number in it if possible.]"
+skills = ""
+
+# ---------------------------------------------------------------- Education
+[[education]]
+school = "[SCHOOL OR UNIVERSITY]"
+degree = "[DEGREE], [FIELD OF STUDY]"
+dates = "[START] – [END]"
+description = "Currently deep in C (pointers, malloc, the usual pain) and Python. [RELEVANT COURSES / GPA / AWARDS]"
+
+# ---------------------------------------------------------------- Skills
+[[skills]]
+name = "Python"
+context = "SlapWindows and university coursework"
+
+[[skills]]
+name = "C"
+context = "University coursework"
+
+[[skills]]
+name = "JavaScript"
+context = "Ask ChatGPT and Outlook Roomier"
+
+[[skills]]
+name = "Flutter"
+context = "Sleep Fixer"
+
+[[skills]]
+name = "Browser Extensions (Manifest V3)"
+context = "2 projects at dxk labs"
+
+# ---------------------------------------------------------------- Contact info
+[[contact]]
+label = "Your Profile"
+value = "github.com/dxk-labs"
+url = "https://github.com/dxk-labs"
+icon = "profile"
+
+[[contact]]
+label = "Website"
+value = "[YOUR_SITE]"
+url = "[YOUR_WEBSITE_URL]"
+icon = "link"
+
+[[contact]]
+label = "Email"
+value = "[YOUR_EMAIL]"
+url = "mailto:[YOUR_EMAIL]"
+icon = "mail"

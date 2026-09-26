@@ -3,9 +3,11 @@
 Run:  py scripts/preview.py      then open http://localhost:8787
 - Editing README.md or anything in assets/ re-renders in place (scroll is kept).
 - Editing scripts/build_assets.py regenerates the SVGs first.
-- The "edit" button opens a side-by-side editor that autosaves README.md.
+- The "edit" button opens a side-by-side editor that autosaves the source file.
+- "classic" edits README.md; "linkedin" edits linkedin.toml and rebuilds README.linkedin.md.
 """
 import http.server
+import os
 import subprocess
 import sys
 import time
@@ -14,6 +16,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PORT = 8787
 BUILD = ROOT / "scripts" / "build_assets.py"
+BUILD_LI = ROOT / "scripts" / "build_linkedin.py"
+TOML = ROOT / "linkedin.toml"
+EDITABLE = {"README.md", "linkedin.toml"}
 
 PAGE = """<!doctype html>
 <html lang="en" data-theme="auto">
@@ -37,6 +42,7 @@ PAGE = """<!doctype html>
   .status { color:var(--muted); font-family:ui-monospace,Consolas,monospace; font-size:12px; flex:1; }
   .bar button { font:inherit; color:var(--fg); background:var(--bg); border:1px solid var(--border);
                 border-radius:6px; padding:4px 10px; cursor:pointer; }
+  .status.err { color:#f85149; }
   .bar button[aria-pressed="true"] { border-color:var(--ok); }
   main { max-width:896px; margin:24px auto; padding:0 16px; }
   .frame { border:1px solid var(--border); border-radius:6px; padding:24px; background:var(--bg); }
@@ -52,6 +58,7 @@ PAGE = """<!doctype html>
   .hint { font-size:12px; color:var(--muted); margin:8px 0 0; }
   kbd { font:11px ui-monospace,Consolas,monospace; border:1px solid var(--border); border-radius:4px; padding:1px 5px; }
   #next { display:none; }
+  .seg { display:inline-flex; gap:4px; padding-right:8px; margin-right:4px; border-right:1px solid var(--border); }
   body.editing #next { display:inline-block; }
   @media (max-width:900px) { body.editing main { grid-template-columns:minmax(0,1fr); } body.editing .editor { position:static; height:60vh; } }
 </style>
@@ -60,6 +67,7 @@ PAGE = """<!doctype html>
 <div class="bar">
   <span class="dot" id="dot"></span><b>Profile preview</b>
   <span class="status" id="status">connecting…</span>
+  <span class="seg"><button data-v="classic">classic</button><button data-v="linkedin">linkedin</button></span>
   <button id="next" title="Jump to the next [PLACEHOLDER] (Ctrl+.)">next placeholder</button>
   <button id="edit" aria-pressed="false">edit</button>
   <button data-t="auto" aria-pressed="true">auto</button>
@@ -69,10 +77,10 @@ PAGE = """<!doctype html>
 <main>
   <section class="editor">
     <textarea id="src" spellcheck="false" aria-label="README.md source"></textarea>
-    <p class="hint">Autosaves to README.md as you type · <kbd>Ctrl</kbd>+<kbd>.</kbd> jumps to the next <code>[PLACEHOLDER]</code></p>
+    <p class="hint">Autosaves to <code id="srcname">README.md</code> as you type · <kbd>Ctrl</kbd>+<kbd>.</kbd> jumps to the next <code>[PLACEHOLDER]</code></p>
   </section>
   <div>
-    <p class="frame-label">dxk-labs / README.md</p>
+    <p class="frame-label" id="label">dxk-labs / README.md</p>
     <div class="frame"><article class="markdown-body" id="out"></article></div>
   </div>
 </main>
@@ -102,31 +110,44 @@ function render() {
   out.querySelectorAll('img').forEach(i => i.setAttribute('src', bust(i.getAttribute('src'))));
 }
 function note(msg) {
+  statusEl.classList.toggle('err', msg.startsWith('build error'));
   statusEl.textContent = msg + ' · ' + new Date().toLocaleTimeString();
   dot.classList.add('flash'); setTimeout(() => dot.classList.remove('flash'), 250);
 }
 const src = document.getElementById('src');
-let saved = null, saveTimer = 0, renderTimer = 0;
+const VARIANTS = {
+  classic:  { readme: 'README.md',          source: 'README.md',     live: true },
+  linkedin: { readme: 'README.linkedin.md', source: 'linkedin.toml', live: false },
+};
+let variant = 'linkedin', saved = null, saveTimer = 0, renderTimer = 0;
+try { const v = localStorage.getItem('pv-variant'); if (VARIANTS[v]) variant = v; } catch (e) {}
+const get = async f => (await fetch('/' + f + '?t=' + Date.now())).text();
 
 async function load(reason) {
-  const text = await (await fetch('/README.md?t=' + Date.now())).text();
-  if (text === saved && reason === 'README.md changed') return;  // our own autosave echoing back
+  const v = VARIANTS[variant];
+  document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === variant));
+  document.getElementById('label').textContent = 'dxk-labs / ' + v.readme;
+  document.getElementById('srcname').textContent = v.source;
+  const text = await get(v.source);
+  // replace the editor only when it holds no unsaved typing, and only if it differs (keeps the caret put)
+  if ((src.value === (saved ?? '') || src.value === '') && src.value !== text) src.value = text;
+  if (src.value === text) saved = text;
   const y = scrollY;
-  if (src.value === (saved ?? '') || src.value === '') { src.value = text; saved = text; }
-  md = src.value;
+  md = v.live ? src.value : await get(v.readme);
   stamp = Date.now();
   render();
   scrollTo(0, y);
   note(reason);
 }
 src.addEventListener('input', () => {
-  clearTimeout(renderTimer); renderTimer = setTimeout(() => { md = src.value; render(); }, 120);
+  const v = VARIANTS[variant];
+  if (v.live) { clearTimeout(renderTimer); renderTimer = setTimeout(() => { md = src.value; render(); }, 120); }
   clearTimeout(saveTimer); statusEl.textContent = 'unsaved…';
   saveTimer = setTimeout(async () => {
     const body = src.value;
-    const r = await fetch('/__save', { method: 'POST', body });
-    if (r.ok) { saved = body; note('saved'); } else note('save failed');
-  }, 600);
+    const r = await fetch('/__save?f=' + encodeURIComponent(v.source), { method: 'POST', body });
+    if (r.ok) { saved = body; note(v.live ? 'saved' : 'saved · rebuilding…'); } else note('save failed');
+  }, v.live ? 600 : 400);
 });
 function nextPlaceholder() {
   const re = /\\[[A-Z][^\\]\\n]*\\]/g;
@@ -148,6 +169,12 @@ function setEditing(on) {
 editBtn.onclick = () => setEditing(!document.body.classList.contains('editing'));
 try { setEditing(localStorage.getItem('pv-edit') === '1'); } catch (e) {}
 
+document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => {
+  if (b.dataset.v === variant) return;
+  variant = b.dataset.v; saved = null; src.value = ''; clearTimeout(saveTimer);
+  try { localStorage.setItem('pv-variant', variant); } catch (e) {}
+  scrollTo(0, 0); load('switched to ' + variant);
+});
 document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
   theme = b.dataset.t;
   try { localStorage.setItem('pv-theme', theme); } catch (e) {}
@@ -165,8 +192,15 @@ load('loaded');
 
 
 def snapshot():
-    files = [ROOT / "README.md", BUILD, *(ROOT / "assets").glob("*.svg")]
+    files = [ROOT / "README.md", ROOT / "README.linkedin.md", TOML, BUILD, BUILD_LI, *(ROOT / "assets").rglob("*.svg")]
     return {f: f.stat().st_mtime for f in files if f.exists()}
+
+
+def run(script):
+    r = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, encoding="utf-8",
+                       env={**os.environ, "PYTHON_COLORS": "0"})
+    print(r.stdout or r.stderr, end="", flush=True)
+    return None if r.returncode == 0 else "build error: " + (r.stderr.strip().splitlines() or ["?"])[-1]
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -202,14 +236,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                         self.wfile.flush()
                         continue
                     changed = [f for f in now if now[f] != seen.get(f)]
-                    reason = "README.md changed"
+                    reason = "updated"
                     if BUILD in changed:
-                        r = subprocess.run([sys.executable, str(BUILD)], capture_output=True, text=True)
-                        reason = "SVGs rebuilt" if r.returncode == 0 else "build error: " + r.stderr.strip().splitlines()[-1]
-                        print(r.stdout or r.stderr, end="")
+                        reason = run(BUILD) or run(BUILD_LI) or "rebuilt"
                         now = snapshot()
-                    elif all(f.suffix == ".svg" for f in changed):
-                        reason = "assets changed"
+                    elif BUILD_LI in changed or TOML in changed:
+                        reason = run(BUILD_LI) or "rebuilt"
+                        now = snapshot()
                     seen = now
                     self.wfile.write(f"data: {reason}\n\n".encode())
                     self.wfile.flush()
@@ -219,11 +252,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
-        if self.path != "/__save":
+        path, _, query = self.path.partition("?")
+        name = query.removeprefix("f=") or "README.md"
+        if path != "/__save" or name not in EDITABLE:
             self.send_error(404)
             return
         body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
-        (ROOT / "README.md").write_bytes(body)
+        (ROOT / name).write_bytes(body)
         self.send_response(204)
         self.end_headers()
 

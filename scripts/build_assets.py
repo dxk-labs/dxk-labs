@@ -87,7 +87,7 @@ def header(t):
 
 
 # ---------------------------------------------------------------- project cards
-def glyph(kind, t):
+def glyph(kind, t, x=508, y=150, opacity=0.14, scale=1):
     c = t["accent"]
     g = {
         "moon": f'<circle cx="0" cy="0" r="46" fill="{c}"/><circle cx="20" cy="-16" r="42" fill="{t["card"]}"/>',
@@ -102,7 +102,7 @@ def glyph(kind, t):
                         f'<animate attributeName="y" values="{-h / 2};{-h * 0.2:.0f};{-h / 2}" dur="{0.9 + i * 0.13:.2f}s" repeatCount="indefinite"/></rect>'
                         for i, (x, h) in enumerate([(-48, 30), (-24, 70), (0, 100), (24, 60), (48, 36)])),
     }[kind]
-    return f'<g transform="translate(508 150)" opacity="0.14">{g}</g>'
+    return f'<g transform="translate({x} {y}) scale({scale})" opacity="{opacity}">{g}</g>'
 
 
 def card(p, t):
