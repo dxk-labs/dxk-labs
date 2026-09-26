@@ -80,8 +80,8 @@ So far that's a sleep-schedule app, a couple of browser extensions, and a Window
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dxk-labs/dxk-labs/output/snake-dark.svg">
-  <img alt="contribution graph being eaten by a snake" src="https://raw.githubusercontent.com/dxk-labs/dxk-labs/output/snake-light.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dxk-labs/dxk-labs/refs/heads/output/snake-dark.svg">
+  <img alt="contribution graph being eaten by a snake" src="https://raw.githubusercontent.com/dxk-labs/dxk-labs/refs/heads/output/snake-light.svg" width="100%">
 </picture>
 
 <picture>
